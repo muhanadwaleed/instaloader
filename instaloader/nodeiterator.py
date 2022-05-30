@@ -133,15 +133,14 @@ class NodeIterator(Iterator[T]):
             return item
         if self._data['page_info']['has_next_page']:
             query_response = self._query(self._data['page_info']['end_cursor'])
-            if self._data['edges'] != query_response['edges'] and len(query_response['edges']) > 0:
-                page_index, data = self._page_index, self._data
-                try:
-                    self._page_index = 0
-                    self._data = query_response
-                except KeyboardInterrupt:
-                    self._page_index, self._data = page_index, data
-                    raise
-                return self.__next__()
+            page_index, data = self._page_index, self._data
+            try:
+                self._page_index = 0
+                self._data = query_response
+            except KeyboardInterrupt:
+                self._page_index, self._data = page_index, data
+                raise
+            return self.__next__()
         raise StopIteration()
 
     @property
